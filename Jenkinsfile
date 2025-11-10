@@ -7,7 +7,6 @@ pipeline {
     }
 
     stages {
-
         stage('Clean Workspace') {
             steps {
                 cleanWs()
@@ -19,7 +18,14 @@ pipeline {
             steps {
                 echo 'Cloning repository...'
                 git branch: 'main', url: 'https://github.com/Ganesh4365/project-ci-cd-01.git'
-                echo 'Repository cloned successfully.'
+            }
+        }
+
+        stage('Verify Docker Access') {
+            steps {
+                sh 'whoami'
+                sh 'docker --version'
+                sh 'docker ps'
             }
         }
 
@@ -27,8 +33,7 @@ pipeline {
             steps {
                 script {
                     echo 'Building Docker image...'
-                    // Use current directory (.) as Docker build context
-                    def app = docker.build("${IMAGE_NAME}", ".")
+                    sh 'docker build -t frontend-image .'
                     echo 'Docker image built successfully.'
                 }
             }
@@ -38,29 +43,30 @@ pipeline {
             steps {
                 script {
                     echo 'Running Docker container...'
-
                     // Stop and remove old container if exists
-                    sh """
-                    docker ps -a | grep ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME} || true
-                    """
+                    sh 'docker rm -f frontend-container || true'
 
                     // Run the new container
-                    sh """
-                    docker run -d -p 80:80 --name ${CONTAINER_NAME} ${IMAGE_NAME}
-                    """
+                    sh 'docker run -d -p 80:80 --name frontend-container frontend-image'
 
                     echo 'Container is up and running on port 80.'
                 }
             }
         }
+
+        stage('Check Running Container') {
+            steps {
+                sh 'docker ps'
+            }
+        }
     }
 
     post {
-        failure {
-            echo 'Pipeline failed. Please check logs for details.'
-        }
         success {
-            echo 'Pipeline executed successfully!'
+            echo '✅ Pipeline completed successfully.'
+        }
+        failure {
+            echo '❌ Pipeline failed. Check logs above.'
         }
     }
 }
