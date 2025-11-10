@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CarZone - Shop Your Dream Car</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+    header { background: #333; color: #fff; padding: 20px; text-align: center; }
+    .section { padding: 40px 20px; }
+    .cars { display: flex; flex-wrap: wrap; justify-content: space-around; }
+    .car-card { background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 300px; margin: 20px; padding: 20px; text-align: center; }
+    .car-card img { width: 100%; border-radius: 4px; }
+    .contact-form { max-width: 500px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; }
+    input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
+    button { background: #333; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #555; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Welcome to CarZone</h1>
+  <p>Your one-stop shop for premium cars</p>
+</header>
+
+<section class="section">
+  <h2 style="text-align:center;">Featured Cars</h2>
+  <div class="cars">
+    <div class="car-card">
+      <img src="https://via.placeholder.com/300x180?text=Sedan" alt="Sedan">
+      <h3>Luxury Sedan</h3>
+      <p>Price: ₹12,00,000</p>
+      <button>Buy Now</button>
+    </div>
+    <div class="car-card">
+      <img src="https://via.placeholder.com/300x180?text=SUV" alt="SUV">
+      <h3>Family SUV</h3>
+      <p>Price: ₹18,50,000</p>
+      <button>Buy Now</button>
+    </div>
+    <div class="car-card">
+      <img src="https://via.placeholder.com/300x180?text=Hatchback" alt="Hatchback">
+      <h3>Compact Hatchback</h3>
+      <p>Price: ₹6,75,000</p>
+      <button>Buy Now</button>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 style="text-align:center;">Contact Us</h2>
+  <form class="contact-form">
+    <input type="text" placeholder="Your Name" required>
+    <input type="email" placeholder="Your Email" required>
+    <textarea rows="4" placeholder="Message or Inquiry"></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</section>
+
+</body>
+</html>
