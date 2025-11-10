@@ -1,24 +1,35 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "frontend-image"
+        CONTAINER_NAME = "frontend-container"
+    }
+
     stages {
+
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+                echo 'Workspace cleaned.'
+            }
+        }
 
         stage('Clone Repository') {
             steps {
-                script {
-                    echo '🔄 Cloning repository...'
-                    git branch: 'main', url: 'https://github.com/Ganesh4365/project-ci-cd-01.git'
-                    echo '✅ Repository cloned successfully.'
-                }
+                echo 'Cloning repository...'
+                git branch: 'main', url: 'https://github.com/Ganesh4365/project-ci-cd-01.git'
+                echo 'Repository cloned successfully.'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo '⚙️ Building Docker image...'
-                    docker.build('frontend-image')
-                    echo '✅ Docker image built successfully.'
+                    echo 'Building Docker image...'
+                    // Use current directory (.) as Docker build context
+                    def app = docker.build("${IMAGE_NAME}", ".")
+                    echo 'Docker image built successfully.'
                 }
             }
         }
@@ -26,16 +37,30 @@ pipeline {
         stage('Run Container') {
             steps {
                 script {
-                    echo '🚀 Running Docker container...'
-                    // Remove existing container if it's already running
-                    sh 'docker rm -f frontend-container || true'
+                    echo 'Running Docker container...'
 
-                    // Run new container on port 80
-                    sh 'docker run -d -p 80:80 --name frontend-container frontend-image'
+                    // Stop and remove old container if exists
+                    sh """
+                    docker ps -a | grep ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME} || true
+                    """
 
-                    echo '✅ Container is up and running on port 80.'
+                    // Run the new container
+                    sh """
+                    docker run -d -p 80:80 --name ${CONTAINER_NAME} ${IMAGE_NAME}
+                    """
+
+                    echo 'Container is up and running on port 80.'
                 }
             }
+        }
+    }
+
+    post {
+        failure {
+            echo 'Pipeline failed. Please check logs for details.'
+        }
+        success {
+            echo 'Pipeline executed successfully!'
         }
     }
 }
